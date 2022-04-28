@@ -1,0 +1,22 @@
+<?xml version="1.0" ?>
+
+<project name="hash" default="compile">
+	<import file="../build-common.xml" />
+
+	<property name="input" value="" />
+
+	<target name="help">
+		<echo level="info">Usage: ant run -Dinput=[FILE]</echo>
+		<echo level="info">       ant run -Dinput=[FOLDER]</echo>
+	</target>
+
+	<target name="run">
+		<java
+			classname="com.samuelkong.gongju.hash.Hasher"
+			classpath="classes"
+			classpathref="lib.classpath"
+		>
+			<arg value="${input}" />
+		</java>
+	</target>
+</project>
