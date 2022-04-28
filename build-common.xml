@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<project name="default" default="help" basedir=".">
+	<property name="common.dir" value="../common" />
+	<property name="project.dir" value="." />
+
+	<basename file="${project.dir}" property="basename" />
+
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${common.dir}/lib/ant-contrib.jar" />
+		</classpath>
+	</taskdef>
+
+	<path id="lib.classpath">
+		<fileset dir="${project.dir}/lib" includes="*.jar" />
+	</path>
+
+	<target name="build-common">
+		<ant
+			dir="${common.dir}"
+			target="jar"
+			inheritAll="false"
+			inheritRefs="false"
+			useNativeBasedir="true"
+		/>
+	</target>
+
+	<target name="clean">
+		<available property="classes.dir.present" file="${project.dir}/classes" type="dir" />
+
+		<if>
+			<equals arg1="${classes.dir.present}" arg2="true" />
+			<then>
+				<delete includeemptydirs="true">
+					<fileset dir="${project.dir}/classes" includes="**/*" />
+				</delete>
+			</then>
+			<else>
+				<mkdir dir="${project.dir}/classes" />
+			</else>
+		</if>
+
+		<available property="dist.dir.present" file="${project.dir}/dist" type="dir" />
+
+		<if>
+			<equals arg1="${dist.dir.present}" arg2="true" />
+			<then>
+				<delete includeemptydirs="true">
+					<fileset dir="${project.dir}/dist" includes="**/*" />
+				</delete>
+			</then>
+			<else>
+				<mkdir dir="${project.dir}/dist" />
+			</else>
+		</if>
+
+		<mkdir dir="${project.dir}/lib" />
+	</target>
+
+	<target name="compile" depends="clean">
+		<if>
+			<not><equals arg1="${basename}" arg2="common" /></not>
+			<then>
+				<antcall target="build-common" />
+
+				<copy file="${common.dir}/dist/common.jar" overwrite="true" todir="${project.dir}/lib" />
+			</then>
+		</if>
+
+		<javac
+			classpath="${project.dir}/classes"
+			classpathref="lib.classpath"
+			debug="on"
+			debuglevel="lines,vars,source"
+			destdir="${project.dir}/classes"
+			encoding="UTF-8"
+			includeAntRuntime="false"
+			srcdir="${project.dir}/src"
+		>
+			<compilerarg value="-Xlint:unchecked" />
+		</javac>
+	</target>
+
+	<target name="help">
+		<echo message="Type &quot;ant -p&quot; for a list of targets" level="info" />
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar basedir="${project.dir}/classes" destfile="${project.dir}/dist/${basename}.jar" />
+	</target>
+</project>
