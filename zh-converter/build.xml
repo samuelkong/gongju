@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+
+<project name="zh-converter" default="compile">
+	<import file="../build-common.xml" />
+
+	<target name="help">
+		<echo level="info">Usage: ant run</echo>
+	</target>
+
+	<target name="run">
+		<java
+			classname="com.samuelkong.gongju.i18n.ZHConverter"
+			classpath="classes"
+			classpathref="lib.classpath"
+		/>
+	</target>
+</project>

@@ -81,13 +81,17 @@ public class FileUtil {
 	}
 
 	public static String read(String filename) throws IOException {
+		return read(new File(filename));
+	}
+
+	public static String read(File file) throws IOException {
 		StringBuilder sb = new StringBuilder();
 
 		Reader reader = null;
 
 		try {
 			reader = new BufferedReader(
-				new InputStreamReader(new FileInputStream(filename), UTF8));
+				new InputStreamReader(new FileInputStream(file), UTF8));
 
 			int length = 0;
 			char[] buffer = new char[4096];
