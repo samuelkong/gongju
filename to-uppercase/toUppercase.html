@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>toUppercase</title>
+	<script type="text/javascript">
+		function foo() {
+			var textarea = document.getElementById("md5");
+
+			textarea.value = textarea.value.trim().toUpperCase();
+		}
+	</script>
+	<style type="text/css">
+		input {
+			width: 500px;
+			font-size: x-large;
+			font-family: monospace;
+		}
+	</style>
+</head>
+<body>
+<form>
+	<input type="text" id="md5" onkeyup="foo();" />
+	<button onclick="foo();" type="button">toUppercase</button>
+</form>
+</body>
+</html>
