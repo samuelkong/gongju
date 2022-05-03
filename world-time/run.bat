@@ -1,0 +1,1 @@
+java -cp ".;classes;lib/common.jar" com.samuelkong.gongju.worldtime.WorldTime
