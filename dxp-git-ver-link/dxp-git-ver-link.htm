@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>get-ver-link</title>
+<script type="text/javascript">
+	const appsMap70 = {
+		'announcements': 'collaboration/announcements',
+		'blogs': 'collaboration/blogs',
+		'bookmarks': 'collaboration/bookmarks',
+		'comment': 'collaboration/comment',
+		'directory': 'collaboration/directory',
+		'document-library': 'collaboration/document-library',
+		'flags': 'collaboration/flags',
+		'image-uploader': 'collaboration/image-uploader',
+		'invitation': 'collaboration/invitation',
+		'item-selector': 'collaboration/item-selector',
+		'mentions': 'collaboration/mentions',
+		'message-boards': 'collaboration/message-boards',
+		'microblogs': 'collaboration/microblogs',
+		'notifications': 'collaboration/notifications',
+		'quick-note': 'collaboration/quick-note',
+		'ratings': 'collaboration/ratings',
+		'recent-documents': 'collaboration/recent-documents',
+		'social': 'collaboration/social',
+		'upload': 'collaboration/upload',
+		'wiki': 'collaboration/wiki',
+		'calendar': 'forms-and-workflow/calendar',
+		'dynamic-data-lists': 'forms-and-workflow/dynamic-data-lists',
+		'dynamic-data-mapping': 'forms-and-workflow/dynamic-data-mapping',
+		'polls': 'forms-and-workflow/polls',
+		'portal-reports-engine': 'forms-and-workflow/portal-reports-engine',
+		'portal-rules-engine': 'forms-and-workflow/portal-rules-engine',
+		'portal-workflow': 'forms-and-workflow/portal-workflow',
+		'alloy': 'foundation/alloy',
+		'analytics': 'foundation/analytics',
+		'captcha': 'foundation/captcha',
+		'configuration-admin': 'foundation/configuration-admin',
+		'contacts': 'foundation/contacts',
+		'expando': 'foundation/expando',
+		'frontend-compatibility': 'foundation/frontend-compatibility',
+		'frontend-css': 'foundation/frontend-css',
+		'frontend-editor': 'foundation/frontend-editor',
+		'frontend-image-editor': 'foundation/frontend-image-editor',
+		'frontend-js': 'foundation/frontend-js',
+		'frontend-taglib': 'foundation/frontend-taglib',
+		'frontend-theme': 'foundation/frontend-theme',
+		'hello-soy': 'foundation/hello-soy',
+		'hello-velocity': 'foundation/hello-velocity',
+		'hello-world': 'foundation/hello-world',
+		'imageio-plugins': 'foundation/imageio-plugins',
+		'license-manager': 'foundation/license-manager',
+		'login': 'foundation/login',
+		'map': 'foundation/map',
+		'microsoft-translator': 'foundation/microsoft-translator',
+		'mobile-device-rules': 'foundation/mobile-device-rules',
+		'monitoring': 'foundation/monitoring',
+		'password-policies-admin': 'foundation/password-policies-admin',
+		'petra': 'foundation/petra',
+		'plugins-admin': 'foundation/plugins-admin',
+		'portal': 'foundation/portal',
+		'portal-background-task': 'foundation/portal-background-task',
+		'portal-cache': 'foundation/portal-cache',
+		'portal-configuration': 'foundation/portal-configuration',
+		'portal-instances': 'foundation/portal-instances',
+		'portal-language': 'foundation/portal-language',
+		'portal-lock': 'foundation/portal-lock',
+		'portal-mobile-device-recognition': 'foundation/portal-mobile-device-recognition',
+		'portal-osgi-debug': 'foundation/portal-osgi-debug',
+		'portal-portlet-bridge': 'foundation/portal-portlet-bridge',
+		'portal-remote': 'foundation/portal-remote',
+		'portal-scheduler': 'foundation/portal-scheduler',
+		'portal-scripting': 'foundation/portal-scripting',
+		'portal-search': 'foundation/portal-search',
+		'portal-security': 'foundation/portal-security',
+		'portal-security-audit': 'foundation/portal-security-audit',
+		'portal-security-sso': 'foundation/portal-security-sso',
+		'portal-settings': 'foundation/portal-settings',
+		'portal-store': 'foundation/portal-store',
+		'portal-template': 'foundation/portal-template',
+		'roles': 'foundation/roles',
+		'server': 'foundation/server',
+		'user-associated-data': 'foundation/user-associated-data',
+		'user-groups-admin': 'foundation/user-groups-admin',
+		'users-admin': 'foundation/users-admin',
+		'web-proxy': 'foundation/web-proxy',
+		'websocket': 'foundation/websocket',
+		'xstream': 'foundation/xstream',
+		'application-list': 'web-experience/application-list',
+		'asset': 'web-experience/asset',
+		'export-import': 'web-experience/export-import',
+		'iframe': 'web-experience/iframe',
+		'journal': 'web-experience/journal',
+		'layout': 'web-experience/layout',
+		'nested-portlets': 'web-experience/nested-portlets',
+		'portlet-configuration': 'web-experience/portlet-configuration',
+		'portlet-display-template': 'web-experience/portlet-display-template',
+		'product-navigation': 'web-experience/product-navigation',
+		'rss': 'web-experience/rss',
+		'site': 'web-experience/site',
+		'site-navigation': 'web-experience/site-navigation',
+		'staging': 'web-experience/staging',
+		'trash': 'web-experience/trash',
+		'xsl-content': 'web-experience/xsl-content'
+	};
+
+	var githubLinkBase = "https://github.com/liferay/liferay-portal-ee/blob/";
+
+	function build70Link(hash) {
+		var path = document.getElementById("path").value;
+
+		path = normalizePath(path);
+
+		var appsMap70Keys = Object.keys(appsMap70);
+
+		for (var i = 0; i < appsMap70Keys.length; i++){
+			var key = appsMap70Keys[i];
+
+			var searchTerm = "/modules/apps/" + key + "/";
+			var replaceTerm = "/modules/apps/" + appsMap70[key] + "/";
+	
+			if (path.startsWith("/modules/apps/" + key + "/")) {
+				path = path.replace(searchTerm, replaceTerm);
+			}
+		}
+
+		return githubLinkBase + hash + path;
+	}
+
+	function buildLink(hash) {
+		var path = document.getElementById("path").value;
+
+		path = normalizePath(path);
+
+		return githubLinkBase + hash + path;
+	}
+
+	function normalizePath(path) {
+		path = path.replaceAll('\\', '/');
+
+		if (path[0] != "/") {
+			path = "/" + path;
+		}
+
+		return path;
+	}
+
+	function updateLinks() {
+		var hashMaster = document.getElementById("hashMaster").value;
+		var hash73x = document.getElementById("hash73x").value;
+		var hash72x = document.getElementById("hash72x").value;
+		var hash71x = document.getElementById("hash71x").value;
+		var hash70x = document.getElementById("hash70x").value;
+		var hash62x = document.getElementById("hash62x").value;
+
+		document.getElementById("linkToMaster").innerHTML = hashMaster;
+		document.getElementById("linkTo73x").innerHTML = hash73x;
+		document.getElementById("linkTo72x").innerHTML = hash72x;
+		document.getElementById("linkTo71x").innerHTML = hash71x;
+		document.getElementById("linkTo70x").innerHTML = hash70x;
+		document.getElementById("linkTo62x").innerHTML = hash62x;
+
+		var linkMaster = buildLink(hashMaster);
+		var link73x = buildLink(hash73x);
+		var link72x = buildLink(hash72x);
+		var link71x = buildLink(hash71x);
+		var link70x = buildLink(hash70x);
+		var link62x = buildLink(hash62x);
+
+		document.getElementById("linkToMaster").href = linkMaster;
+		document.getElementById("linkTo73x").href = link73x;
+		document.getElementById("linkTo72x").href = link72x;
+		document.getElementById("linkTo71x").href = link71x;
+		document.getElementById("linkTo70x").href = link70x;
+		document.getElementById("linkTo62x").href = link62x;
+
+		document.getElementById("jiraMarkup").value = "[master|" + 
+			linkMaster +"], [7.3.x|" + 
+			link73x + "], [7.2.x|" + 
+			link72x + "], [7.1.x|" + 
+			link71x + "], [7.0.x|" + 
+			link70x + "], [6.2.x|" + 
+			link62x+ "]";
+	}
+</script>
+<style type="text/css">
+	a { font-family:monospace; }
+	input.hash {width:40ch; }
+	#commits { padding-top:3em; }
+	#commits, #commits a { color: #999; }
+	#jiraMarkup { margin-top:2em; width:100ch; }
+	#path { width:128ch; }
+	.branch-name { text-align:right; }
+	.branch-name::after { content:":"; }
+</style>
+</head>
+<body onload="updateLinks()">
+
+<div>Path: <input id="path" onchange="updateLinks()" type="text" /></div>
+
+<table>
+<tr>
+	<td class="branch-name">master</td>
+	<td><a href="#" id="linkToMaster" target="_blank"></a></td>
+</tr>
+<tr>
+	<td class="branch-name">7.3.x</td>
+	<td><a href="#" id="linkTo73x" target="_blank"></a></td>
+</tr>
+<tr>
+	<td class="branch-name">7.2.x</td>
+	<td><a href="#" id="linkTo72x" target="_blank"></a></td>
+</tr>
+<tr>
+	<td class="branch-name">7.1.x</td>
+	<td><a href="#" id="linkTo71x" target="_blank"></a></td>
+</tr>
+<tr>
+	<td class="branch-name">7.0.x</td>
+	<td><a href="#" id="linkTo70x" target="_blank"></a></td>
+</tr>
+<tr>
+	<td class="branch-name">ee-6.2.x</td>
+	<td><a href="#" id="linkTo62x" target="_blank"></a></td>
+</tr>
+</table>
+
+<textarea id="jiraMarkup"></textarea>
+
+<div id="commits">Commits: 
+<a href="https://github.com/liferay/liferay-portal-ee/commits/master">master</a>,
+<a href="https://github.com/liferay/liferay-portal-ee/commits/7.3.x">7.3.x</a>,
+<a href="https://github.com/liferay/liferay-portal-ee/commits/7.2.x">7.2.x</a>,
+<a href="https://github.com/liferay/liferay-portal-ee/commits/7.1.x">7.1.x</a>,
+<a href="https://github.com/liferay/liferay-portal-ee/commits/7.0.x">7.0.x</a>,
+<a href="https://github.com/liferay/liferay-portal-ee/commits/ee-6.2.x">ee-6.2.x</a>
+</div>
+
+<table>
+<tr>
+	<td class="branch-name">master</td>
+	<td><input class="hash" id="hashMaster" onchange="updateLinks()" type="text" value="master" /></td>
+</tr>
+<tr>
+	<td class="branch-name">7.3.x</td>
+	<td><input class="hash" id="hash73x" onchange="updateLinks()" type="text" value="7.3.x" /></td>
+</tr>
+<tr>
+	<td class="branch-name">7.2.x</td>
+	<td><input class="hash" id="hash72x" onchange="updateLinks()" type="text" value="7.2.x" /></td>
+</tr>
+<tr>
+	<td class="branch-name">7.1.x</td>
+	<td><input class="hash" id="hash71x" onchange="updateLinks()" type="text" value="7.1.x" /></td>
+</tr>
+<tr>
+	<td class="branch-name">7.0.x</td>
+	<td><input  class="hash" id="hash70x" onchange="updateLinks()" type="text" value="7.0.x" /></td>
+</tr>
+<tr>
+	<td class="branch-name">ee-6.2.x</td>
+	<td><input  class="hash" id="hash62x" onchange="updateLinks()" type="text" value="ee-6.2.x" /></td>
+</tr>
+</table>
+
+</body>
+</html>
