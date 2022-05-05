@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>World Time</title>
+	<script type="text/javascript">
+		var timeZoneIds = [
+			"UTC",
+			"Asia/Shanghai",
+			"Asia/Tokyo",
+			"Australia/Sydney",
+			"America/Los_Angeles",
+			"America/New_York",
+			"America/Sao_Paulo",
+			"Europe/Madrid",
+			"Europe/Budapest",
+			"Europe/Berlin",
+			"Asia/Calcutta"
+		];
+
+		var now = new Date();
+
+		var event = new Date(
+			Date.UTC(
+				now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(),
+				now.getUTCHours(), 0, 0, 0));
+
+		function displayTimeZoneTable() {
+			var timeZoneTable = "<table cellpadding=\"0\" cellspacing=\"0\">" +
+				"<colgroup>" +
+				"<col></col><col></col><col></col><col></col><col></col>" +
+				"<col></col><col></col><col></col><col></col><col></col>" +
+				"<col></col><col></col><col></col><col></col><col></col>" +
+				"<col></col><col></col><col></col><col></col><col></col>" +
+				"<col></col><col></col><col></col><col></col><col></col>" +
+				"</colgroup>";
+
+			for (i = 0; i < timeZoneIds.length; i++) {
+				timeZoneTable += getTimeZoneRow(timeZoneIds[i]);
+			}
+
+			timeZoneTable += "</table>";
+
+			document.write(timeZoneTable);
+		}
+
+		function formatTime(hour, minute) {
+			hour = hour % 24;
+
+			if (hour < 10) {
+				hour = "0" + hour;
+			}
+
+			return hour + ":" + minute 
+		}
+
+		function formatTimeZoneName(timeZoneId) {
+			var parts = timeZoneId.split("/");
+
+			var timeZoneName = (parts.length == 2) ? parts[1] : parts[0];
+
+			timeZoneName = timeZoneName.replace("_", " ");
+
+			return timeZoneName;
+		}
+
+		function getTimeZoneRow(timeZoneId) {
+			var options = {
+				hour: 'numeric',
+				hour12: false,
+				minute: 'numeric',
+				timeZone: timeZoneId
+			}
+
+			var hourMinuteString = new Intl.DateTimeFormat(
+				'en-US', options).format(event);
+
+			var hourMinuteArray = hourMinuteString.split(":");
+
+			var hour = parseInt(hourMinuteArray[0]);
+			var minute = hourMinuteArray[1];
+
+			var timeZoneRow = "<tr><th>";
+
+			timeZoneRow += formatTimeZoneName(timeZoneId);
+			timeZoneRow += "</th>";
+
+			for (var i = hour; i < (hour + 24); i++) {
+				timeZoneRow += "<td>" + formatTime(i,  minute) + "</td>";
+			}
+
+			timeZoneRow += "</tr>";
+
+			return timeZoneRow;
+		}
+
+	</script>
+	<style type="text/css">
+		body {
+			font-family: sans-serif;
+			font-size: small;
+		}
+		col:nth-child(even) {
+			background: #DDD;
+		}
+		col:nth-child(odd) {
+			background: #FFF;
+		}
+		td, th {
+			margin: 0;
+			padding: 0.5ex;
+		}
+		th {
+			font-weight: bold;
+			text-align: left;
+		}
+	</style>
+</head>
+<body>
+	<script type="text/javascript">
+		displayTimeZoneTable();
+	</script>
+</body>
+</html>
