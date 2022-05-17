@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<project name="hash" default="compile">
+	<import file="../build-common.xml" />
+
+	<property name="needle" value="" />
+	<property name="haystack" value="" />
+
+	<target name="help">
+		<echo level="info">Usage: ant run -Dneedle=[STRING] -Dhaystack=[FOLDER]</echo>
+		<echo level="info">       ant run -Dneedle=[STRING]</echo>
+	</target>
+
+	<target name="run">
+		<java
+			classname="com.samuelkong.gongju.finder.Finder"
+			classpath="classes"
+			classpathref="lib.classpath"
+		>
+			<arg value="${needle}" />
+			<arg value="${haystack}" />
+		</java>
+	</target>
+</project>
