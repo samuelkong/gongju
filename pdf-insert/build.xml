@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+
+<project name="hash" default="compile">
+	<import file="../build-common.xml" />
+
+	<target name="help">
+		<echo level="info">Usage: ant run-insert</echo>
+		<echo level="info">Usage: ant run-replace</echo>
+	</target>
+
+	<target name="run">
+		<antcall target="run-insert" />
+	</target>
+
+	<target name="run-insert">
+		<java
+			classname="com.samuelkong.gongju.pdf.insert.PdfInsert"
+			classpath="classes"
+			classpathref="lib.classpath"
+		>
+			<arg value="--insert" />
+		</java>
+	</target>
+
+	<target name="run-replace">
+		<java
+			classname="com.samuelkong.gongju.pdf.insert.PdfInsert"
+			classpath="classes"
+			classpathref="lib.classpath"
+		>
+			<arg value="--replace" />
+		</java>
+	</target>
+</project>
