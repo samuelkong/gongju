@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<project name="zip-finder" default="compile">
+	<import file="../build-common.xml" />
+
+	<property name="needle" value="" />
+	<property name="haystack" value="" />
+
+	<target name="help">
+		<echo level="info">Usage: ant run -Dneedle=[STRING] -Dhaystack=[FILE]</echo>
+		<echo level="info">       ant run -Dneedle=[STRING] -Dhaystack=[FOLDER]</echo>
+	</target>
+
+	<target name="run">
+		<java
+			classname="com.samuelkong.gongju.zip.deepfinder.DeepZipFinder"
+			classpath="classes"
+			classpathref="lib.classpath"
+		>
+			<arg value="${needle}" />
+			<arg value="${haystack}" />
+		</java>
+	</target>
+</project>
