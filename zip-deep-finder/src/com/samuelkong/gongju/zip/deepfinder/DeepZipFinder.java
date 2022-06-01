@@ -8,17 +8,13 @@ import com.samuelkong.gongju.zip.deepfinder.util.PropsValues;
 import java.io.File;
 import java.io.IOException;
 
-import java.util.List;
+import java.util.Random;
 
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-import net.lingala.zip4j.model.FileHeader;
 
 public class DeepZipFinder {
 
 	public static void main(String[] args) throws Exception {
-		String haystack = null;
-
 		if ((args.length >= 2) && !Validator.isNull(args[0]) &&
 			!Validator.isNull(args[1])) {
 
@@ -43,10 +39,10 @@ public class DeepZipFinder {
 
 	public static void find(File haystack) throws IOException {
 		if (haystack.isDirectory()) {
-			findInFolder(haystack);
+			findInFolder(haystack, "");
 		}
 		else {
-			findInFile(haystack);
+			findInFile(haystack, "");
 		}
 	}
 
@@ -54,103 +50,138 @@ public class DeepZipFinder {
 		return str.indexOf(needle) >= 0;
 	}
 
-	protected static void findInFile(File file) throws IOException {
+	protected static void findInFile(File file, String currentPath)
+		throws IOException {
+
 		String fileName = file.getName();
 
 		if (containsNeedle(fileName)) {
-			print(file.getPath());
+			print(file.getPath(), currentPath);
 		}
 
-		if (_isManifest(file)) {
-			findInManifestFile(file);
+		if (_isTextFile(file)) {
+			findInManifestFile(file, currentPath);
 		}
 		else if (_isZip(file)) {
-			findInZipFile(file);
+			findInZipFile(file, currentPath);
 		}
 
 	}
 
-	protected static void findInFolder(File folder) 
+	protected static void findInFolder(File folder, String currentPath) 
 		throws IOException {
+
+		if (_isIgnored(folder)) {
+			return;
+		}
 
 		String folderName = folder.getName();
 
 		if (containsNeedle(folderName)) {
-			print(folder.getPath());
+			print(folder.getPath(), currentPath);
 		}
 
 		File[] files = folder.listFiles();
 
 		for (File file : files) {
-			find(file);
+			if (file.isDirectory()) {
+				findInFolder(file, currentPath);
+			}
+			else {
+				findInFile(file, currentPath);
+			}
 		}
 	}
 
-	protected static void findInManifestFile(File manifestFile)
+	protected static void findInFolder(String folderPath, String currentPath)
+		throws IOException {
+
+		findInFolder(new File(folderPath), currentPath);
+	}
+
+	protected static void findInManifestFile(
+			File manifestFile, String currentPath)
 		throws IOException {
 
 		String content = FileUtil.read(manifestFile);
 
 		if (containsNeedle(content)) {
-			print(manifestFile.getPath());
+			print(manifestFile.getPath(), currentPath);
 		}
 	}
 
-	protected static void findInZipFile(File haystack)
+	protected static void findInZipFile(File haystack, String currentPath)
 		throws IOException {
 
 		ZipFile zipFile = new ZipFile(haystack);
 
-		findInZipFile(zipFile);
+		findInZipFile(zipFile, currentPath);
 
 		zipFile.close();
 	}
 
-	protected static void findInZipFile(ZipFile zipFile) {
-		try {
-			List<FileHeader> fileHeaders = zipFile.getFileHeaders();
+	protected static void findInZipFile(ZipFile zipFile, String currentPath)
+		throws IOException {
 
-			for (FileHeader fileHeader : fileHeaders) {
-				String zipEntryPath = fileHeader.getFileName();
+		String tmpFolder = _getTmpFolder();
 
-				String zipEntryName = _getFileName(zipEntryPath);
+		zipFile.extractAll(tmpFolder);
 
-				if (containsNeedle(zipEntryName)) {
-					print(zipFile.getFile().getPath() + "/" + zipEntryPath);
-				}
+		findInFolder(
+			tmpFolder,
+			currentPath + "/" + _removeTmpFolder(zipFile.getFile().getPath()));
+
+		FileUtil.delete(tmpFolder);
+	}
+
+	protected static void print(String location, String currentPath) {
+		location = _normalizePathSeparator(location);
+
+		location = _removeTmpFolder(location);
+
+		String completeLocation = currentPath + "/" + location;
+
+		System.out.println(completeLocation);
+	}
+
+	private static String _getTmpFolder() {
+		Random random = new Random();
+
+		return PropsValues.TMP_FOLDER + _TMP_FOLDER_PREFIX + random.nextInt();
+	}
+
+	private static boolean _isIgnored(File file) {
+		String path = file.getPath();
+
+		path = _normalizePathSeparator(path);
+
+		path = _removeRootFolder(path);
+
+		path = _removeTmpFolder(path);
+
+		if (!path.startsWith("/")) {
+			path = "/" + path;
+		}
+
+		for (String ignoredPath : PropsValues.IGNORED_PATHS) {
+			if (ignoredPath.startsWith("/") && path.startsWith(ignoredPath)) {
+				return true;
+			}
+
+			if (!ignoredPath.startsWith("/") &&
+				(path.indexOf(ignoredPath) >= 0)) {
+
+				return true;
 			}
 		}
-		catch (ZipException e) {
-			e.printStackTrace();
-		}
+
+		return false;
 	}
 
-	protected static void print(String location) {
-		location = location.replace('\\', '/');
-
-		System.out.println("- " + location);
-	}
-
-	private static String _getFileName(String path) {
-		path = path.replace('\\', '/');
-
-		if (path.endsWith("/")) {
-			path = path.substring(0, path.length() - 1);
-		}
-
-		int x = path.lastIndexOf("/");
-
-		if (x < 0) {
-			return path;
-		}
-
-		return path.substring(x + 1);
-	}
-
-	private static boolean _isManifest(File file) {
+	private static boolean _isTextFile(File file) {
 		String name = file.getName();
 
-		if (ArrayUtil.contains(name, PropsValues.MANIFEST_FILES)) {
+		if (ArrayUtil.contains(name, PropsValues.TEXT_FILES)) {
 			return true;
 		}
 
@@ -167,6 +198,39 @@ public class DeepZipFinder {
 		return result;
 	}
 
+	private static String _normalizePathSeparator(String path) {
+		return path.replace('\\', '/');
+	}
+
+	private static String _removePathPrefix(String path, String prefix) {
+		path = _normalizePathSeparator(path);
+
+		if (!path.startsWith(prefix)) {
+			return path;
+		}
+
+		int x = path.indexOf("/", prefix.length());
+
+		if (x < 0) {
+			return "";
+		}
+
+		return path.substring(x + 1);
+	}
+
+	private static String _removeRootFolder(String path) {
+		return _removePathPrefix(path, haystack);
+	}
+
+	private static String _removeTmpFolder(String path) {
+		String prefix = PropsValues.TMP_FOLDER + _TMP_FOLDER_PREFIX;
+
+		return _removePathPrefix(path, prefix);
+	}
+
+	protected static String haystack = null;
 	protected static String needle = null;
+
+	private static String _TMP_FOLDER_PREFIX = "/tmp";
 
 }

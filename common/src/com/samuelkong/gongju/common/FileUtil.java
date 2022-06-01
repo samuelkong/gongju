@@ -14,6 +14,22 @@ import java.util.TreeSet;
 
 public class FileUtil {
 
+	public static void delete(File file) {
+		if (file.isDirectory()) {
+			File[] files = file.listFiles();
+
+			for (File curFile : files) {
+				delete(curFile);
+			}
+		}
+
+		file.delete();
+	}
+
+	public static void delete(String filename) {
+		delete(new File(filename));
+	}
+
 	public static String getExtension(File file) {
 		return getExtension(file.getName());
 	}
