@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+
+<project name="pwned-passwords" default="compile">
+	<import file="../build-common.xml" />
+
+	<property name="password" value="" />
+
+	<target name="help">
+		<echo level="info">Usage: ant run -Dpassword=[PASSWORD]</echo>
+	</target>
+
+	<target name="run">
+		<java
+			classname="com.samuelkong.gongju.pwned.passwords.PwnedPasswords"
+			classpath="classes"
+			classpathref="lib.classpath"
+		>
+			<arg value="${password}" />
+		</java>
+	</target>
+</project>
