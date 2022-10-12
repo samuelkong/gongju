@@ -174,13 +174,32 @@
 		document.getElementById("linkTo70x").href = link70x;
 		document.getElementById("linkTo62x").href = link62x;
 
-		document.getElementById("jiraMarkup").value = "[master|" + 
-			linkMaster +"], [7.3.x|" + 
-			link73x + "], [7.2.x|" + 
-			link72x + "], [7.1.x|" + 
-			link71x + "], [7.0.x|" + 
-			link70x + "], [6.2.x|" + 
-			link62x+ "]";
+		var jiraMarkup = "";
+
+		if (document.getElementById("enableJiraLinkMaster").checked) {
+			jiraMarkup += "[master|" + linkMaster +"], ";
+		}
+		if (document.getElementById("enableJiraLink73x").checked) {
+			jiraMarkup += "[7.3.x|" + link73x +"], ";
+		}
+		if (document.getElementById("enableJiraLink72x").checked) {
+			jiraMarkup += "[7.2.x|" + link72x +"], ";
+		}
+		if (document.getElementById("enableJiraLink71x").checked) {
+			jiraMarkup += "[7.1.x|" + link71x +"], ";
+		}
+		if (document.getElementById("enableJiraLink70x").checked) {
+			jiraMarkup += "[7.0.x|" + link70x +"], ";
+		}
+		if (document.getElementById("enableJiraLink62x").checked) {
+			jiraMarkup += "[6.2.x|" + link62x +"], ";
+		}
+
+		if (jiraMarkup.length != 0) {
+			jiraMarkup = jiraMarkup.slice(0, -2);
+		}
+
+		document.getElementById("jiraMarkup").value = jiraMarkup;
 	}
 </script>
 <style type="text/css">
@@ -200,27 +219,33 @@
 
 <table>
 <tr>
-	<td class="branch-name">master</td>
+	<td class="branch-name"><label for="enableJiraLinkMaster">master</label></td>
+	<td><input checked="checked" id="enableJiraLinkMaster" onchange="updateLinks()" type="checkbox" /></td>
 	<td><a href="#" id="linkToMaster" target="_blank"></a></td>
 </tr>
 <tr>
-	<td class="branch-name">7.3.x</td>
+	<td class="branch-name"><label for="enableJiraLink73x">7.3.x</label></td>
+	<td><input checked="checked" id="enableJiraLink73x" onchange="updateLinks()" type="checkbox" /></td>
 	<td><a href="#" id="linkTo73x" target="_blank"></a></td>
 </tr>
 <tr>
-	<td class="branch-name">7.2.x</td>
+	<td class="branch-name"><label for="enableJiraLink72x">7.2.x</label></td>
+	<td><input checked="checked" id="enableJiraLink72x" onchange="updateLinks()" type="checkbox" /></td>
 	<td><a href="#" id="linkTo72x" target="_blank"></a></td>
 </tr>
 <tr>
-	<td class="branch-name">7.1.x</td>
+	<td class="branch-name"><label for="enableJiraLink71x">7.1.x</label></td>
+	<td><input checked="checked" id="enableJiraLink71x" onchange="updateLinks()" type="checkbox" /></td>
 	<td><a href="#" id="linkTo71x" target="_blank"></a></td>
 </tr>
 <tr>
-	<td class="branch-name">7.0.x</td>
+	<td class="branch-name"><label for="enableJiraLink70x">7.0.x</label></td>
+	<td><input checked="checked" id="enableJiraLink70x" onchange="updateLinks()" type="checkbox" /></td>
 	<td><a href="#" id="linkTo70x" target="_blank"></a></td>
 </tr>
 <tr>
-	<td class="branch-name">ee-6.2.x</td>
+	<td class="branch-name"><label for="enableJiraLink62x">ee-6.2.x</label></td>
+	<td><input checked="checked" id="enableJiraLink62x" onchange="updateLinks()" type="checkbox" /></td>
 	<td><a href="#" id="linkTo62x" target="_blank"></a></td>
 </tr>
 </table>
