@@ -177,22 +177,22 @@
 		var jiraMarkup = "";
 
 		if (document.getElementById("enableJiraLinkMaster").checked) {
-			jiraMarkup += "[master|" + linkMaster +"], ";
+			jiraMarkup += "[master](" + linkMaster +"), ";
 		}
 		if (document.getElementById("enableJiraLink73x").checked) {
-			jiraMarkup += "[7.3.x|" + link73x +"], ";
+			jiraMarkup += "[7.3.x](" + link73x +"), ";
 		}
 		if (document.getElementById("enableJiraLink72x").checked) {
-			jiraMarkup += "[7.2.x|" + link72x +"], ";
+			jiraMarkup += "[7.2.x](" + link72x +"), ";
 		}
 		if (document.getElementById("enableJiraLink71x").checked) {
-			jiraMarkup += "[7.1.x|" + link71x +"], ";
+			jiraMarkup += "[7.1.x](" + link71x +"), ";
 		}
 		if (document.getElementById("enableJiraLink70x").checked) {
-			jiraMarkup += "[7.0.x|" + link70x +"], ";
+			jiraMarkup += "[7.0.x](" + link70x +"), ";
 		}
 		if (document.getElementById("enableJiraLink62x").checked) {
-			jiraMarkup += "[6.2.x|" + link62x +"], ";
+			jiraMarkup += "[6.2.x](" + link62x +"), ";
 		}
 
 		if (jiraMarkup.length != 0) {
@@ -204,7 +204,7 @@
 </script>
 <style type="text/css">
 	a { font-family:monospace; }
-	input.hash {width:40ch; }
+	input.hash { font-family:monospace; width:40ch; }
 	#commits { padding-top:3em; }
 	#commits, #commits a { color: #999; }
 	#jiraMarkup { margin-top:2em; width:100ch; }
