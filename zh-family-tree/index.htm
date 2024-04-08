@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Chinese Family Tree Calculator</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		* {
+			box-sizing: border-box;
+			font-family: sans-serif;
+		}
+		body {
+			margin: auto;
+			max-width: 768px;
+			width: 100%;
+		}
+		button {
+			color: #444;
+			background-color: #FFF;
+			border-radius: 1em;
+			margin: 0.2em;
+			padding: 0.5em 0;
+			width: calc(33% - 0.4em);
+		}
+		button:hover, button.reset:hover, button:active, button.reset:active {
+			background-color: #FFCC02;
+		}
+		button.reset {
+			background-color: #DDD;
+		}
+		button .label-main {
+			color: #000;
+			font-size: 1.4em;
+			font-weight: bold;
+		}
+		h1 {
+			background-color: #BEBEBE;
+			font-size: 1.2em;
+			font-weight: normal;
+			margin: 0;
+			padding: 0.2em 0.4em;
+		}
+		#buttons {
+			padding: 0 0.4em 0.4em 0.4em;
+		}
+		#jiao {
+			color: #C0C0C0;
+			float: left;
+		}
+		#query {
+			padding: 0.2em 0.9em;
+		}
+		#resultCN {
+			float: right;
+			text-align: center;
+		}
+		#resultExtra {
+			text-align: right;
+			margin: 0 0.8em 1em 0;
+		}
+		#resultPinyin {
+			color: #444;
+			font-size: 0.8em;
+		}
+		#screen {
+			background-color: #FFF;
+			border-color: #C0C0C0;
+			border-style: solid;
+			font-size: 1.6em;
+			font-weight: bold;
+			margin: 0 0.4em 0.2em 0.4em;
+			padding: 0.1em 0.5em;
+		}
+		#screen::after {
+			content: "";
+			clear: both;
+			display: table;
+		}
+		.calculator {
+			background-color: #F0F0F0;
+		}
+		.de {
+			color: #C0C0C0;
+		}
+		.result-label {
+			color: #C0C0C0;
+			font-weight: bold;
+		}
+		@media only screen and (min-width: 768px) {
+			button {
+				width: calc(25% - 0.4em);
+			}
+			.calculator {
+				border-color: #F0F0F0;
+				border-style: groove;
+			}
+		}
+	</style>
+	<script type="text/javascript" src="tree-data.js"></script>
+	<script type="text/javascript">
+		var current = people["wo"];
+
+		function formatButton(rel) {
+			var cn = relationships[rel].cn;
+
+			cn = cn.replace("（", "</span>（");
+
+			return "<button onclick=\"update('" + rel + 
+				"')\"><span class=\"label-main\">" + cn +
+				"</span><br />" + relationships[rel].pinyin + "<br />" +
+				relationships[rel].en + "</button>";
+		}
+
+		function init() {
+			current = people["wo"];
+
+			document.getElementById("query").innerHTML = "我";
+
+			updateResult();
+			updateButtons();
+		}
+
+		function update(rel) {
+			if (!(rel in current.relationships)) {
+				return;
+			}
+
+			current = current.relationships[rel];
+
+			updateQuery(rel);
+			updateResult();
+			updateButtons();
+		}
+
+		function updateButtons() {
+			document.getElementById("buttons").innerHTML = "";
+
+			for (var key in current.relationships) {
+				document.getElementById("buttons").innerHTML += formatButton(key);
+			}
+
+			document.getElementById("buttons").innerHTML +=
+				"<button class=\"reset\" onclick=\"init()\">&nbsp;<br />" +
+				"<span class=\"label-main\">C</span><br />&nbsp;</button>";
+		}
+
+		function updateQuery(rel) {
+			var cn = relationships[rel].cn;
+
+			var x = cn.indexOf("（");
+
+			if (x >= 0) {
+				cn = cn.substring(0, x);
+			}
+
+			document.getElementById("query").innerHTML += 
+				"<span class=\"de\">的</span>" + cn;
+		}
+
+		function updateResult() {
+			document.getElementById("resultCN").innerHTML =
+				current.cn + "<br /><span id=\"resultPinyin\">" + current.pinyin +
+				"</span>";
+			document.getElementById("resultEN").innerHTML = current.en;
+			document.getElementById("resultHK").innerHTML = current.hk;
+			document.getElementById("resultJyutping").innerHTML = current.jyutping;
+		}
+
+	</script>
+</head>
+<body onload="init();">
+	<div class="calculator">
+		<h1>Chinese Family Tree Calculator</h1>
+
+		<div id="query"></div>
+
+		<div id="screen">
+			<div id="jiao">叫</div>
+			<div id="resultCN"></div>
+		</div>
+
+		<div id="resultExtra">
+			<span class="result-label">EN: </span><span id="resultEN"></span>
+			<span class="result-label">HK: </span><span id="resultHK"></span>
+			<span class="result-label">JP: </span><span id="resultJyutping"></span>
+		</div>
+
+		<div id="buttons"></div>
+	</div>
+</body>
+</html>
