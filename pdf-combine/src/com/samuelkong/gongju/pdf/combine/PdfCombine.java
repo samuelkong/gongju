@@ -59,6 +59,8 @@ public class PdfCombine {
 
 				combinedDocument.addPage(page);
 			}
+
+			document.close();
 		}
 
 		return combinedDocument;
